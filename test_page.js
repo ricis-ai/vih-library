@@ -2,7 +2,7 @@
  * under a minimal DOM stub in Node, loads the real library.json, and
  * checks that the browse lists it renders hold all 77 documents, that
  * the search box and the sort control behave as specified, and that the
- * pending and superseded entries render without download links.
+ * superseded entry renders without a download link.
  * Run: node test_page.js (exit 0 only when every check passes).
  *
  * This checks the page's own render path and wording. It cannot check
@@ -134,12 +134,12 @@ setTimeout(function () {
       "Version 2.0. Revised 16 November 2026 at 22:18 Central. By AB9MZ.") !== -1);
 
   /* Pending and superseded entries have no download link. */
-  check("radios list carries the pending flag and no link",
-    slot("radio").innerHTML.indexOf("Coming soon — source check pending.") !== -1
-    && slot("radio").innerHTML.indexOf("<a href=") === -1);
-  check("resources list carries the pending flag and no link",
-    slot("res").innerHTML.indexOf("Coming soon — source check pending.") !== -1
-    && slot("res").innerHTML.indexOf("<a href=") === -1);
+  check("radios list links to the author's copy and carries no pending flag",
+    slot("radio").innerHTML.indexOf("Coming soon — source check pending.") === -1
+    && slot("radio").innerHTML.indexOf('href="https://tonnesoftware.com/downloads/2017-mar-apr-qex-Tonne.pdf"') !== -1);
+  check("resources list links to the relative library path and carries no pending flag",
+    slot("res").innerHTML.indexOf("Coming soon — source check pending.") === -1
+    && slot("res").innerHTML.indexOf('href="RES/Blind-Population-Distribution.pdf"') !== -1);
   check("general list carries the superseded flag and no link",
     slot("gen").innerHTML.indexOf("Superseded by this page.") !== -1
     && slot("gen").innerHTML.indexOf("<a href=") === -1);

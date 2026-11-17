@@ -2,7 +2,7 @@
 
 The searchable, sortable, accessible front door to the Visually Inconvenienced Hams group's files. Live page: https://ricis-ai.github.io/vih-library/
 
-The page renders its lists from library.json, with a live search box and a sort control (alphabetical by name, and by date) whose choice stays put. The field-reference collection lives in its own repository, ricis-ai/field-reference, and this page links to it. Two files are listed without download links until their copyright status is cleared: the Tonne audio bandpass filter article and the blind-population distribution reference. Both are still in the group's Facebook Files.
+The page renders its lists from library.json, with a live search box and a sort control (alphabetical by name, and by date) whose choice stays put. The field-reference collection lives in its own repository, ricis-ai/field-reference, and this page links to it. Every file has a download link except the document index itself, which this page supersedes. The Tonne audio bandpass filter article links to the author's own copy at tonnesoftware.com (QEX March/April 2017, copyright ARRL) rather than being hosted here.
 
 ## Files in this directory
 
@@ -19,3 +19,4 @@ The page renders its lists from library.json, with a live search box and a sort 
 
 - CNTST/ — the contest schedule ($Contest-Schedule.txt), updated every morning.
 - LIC/ — the Technician license question pool, 2026-2030, plain text. The Braille edition lives in the technician-class repository.
+- RES/ — the blind-population distribution reference (Blind-Population-Distribution.pdf), made by Gregory AB9MZ from public data.

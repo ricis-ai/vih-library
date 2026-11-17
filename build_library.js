@@ -20,8 +20,7 @@
  * relative URLs (LIC/..., CNTST/...), so they work whatever the repo is
  * called. Files already on GitHub use absolute Pages URLs. The kit zip
  * lives only on Facebook Files, so it links to its group Files post.
- * The two copyright-check files and the superseded index have url null
- * and no download link.
+ * The superseded index has url null and no download link.
  */
 "use strict";
 const fs = require("fs");
@@ -242,7 +241,7 @@ add({
   note: "Public domain. The same question pool in contracted Braille (UEB grade 2), for Braille displays and embossers."
 });
 
-/* ---- Radios: the Tonne article — source check pending, no link ---- */
+/* ---- Radios: the Tonne article — links to the author's own copy ---- */
 add({
   name: "Improved audio-frequency bandpass filter for Morse code reception — Tonne",
   file: "Improved Audio-Frequency Bandpass Filter for Morse Code Reception - Tonne.pdf",
@@ -251,17 +250,17 @@ add({
   section: "Radios",
   list: "radio",
   format: "PDF",
-  url: null,
+  url: "https://tonnesoftware.com/downloads/2017-mar-apr-qex-Tonne.pdf",
   version: null,
   date: null,
   time: null,
   author: null,
   keywords: ["tonne", "bandpass", "filter", "audio", "morse", "cw", "reception"],
-  status: "pending",
-  note: "This is a named author's technical paper, and its copyright status is not yet cleared, so it has no download link here yet. It is still in the group's Facebook Files."
+  status: "available",
+  note: "By James L. Tonne, W4ENE, QEX March/April 2017, copyright ARRL. The author hosts it himself, so the page links to his copy rather than hosting one. It is also still in the group's Facebook Files."
 });
 
-/* ---- Resources: the blind-population reference — source check pending ---- */
+/* ---- Resources: the blind-population reference — Gregory's own graph, hosted ---- */
 add({
   name: "Blind population distribution in the United States",
   file: "Blind-Population-Distribution.pdf",
@@ -270,14 +269,14 @@ add({
   section: "Resources",
   list: "res",
   format: "PDF",
-  url: null,
+  url: "RES/Blind-Population-Distribution.pdf",
   version: null,
   date: null,
   time: null,
   author: null,
   keywords: ["blind", "population", "distribution", "statistics", "reference"],
-  status: "pending",
-  note: "The source of this reference is not recorded, so its copyright status is not yet cleared, so it has no download link here yet. It is still in the group's Facebook Files."
+  status: "available",
+  note: "Made by Gregory AB9MZ from public data: data.gov, the World Health Organization (who.int), and resources from national blind organizations. Data as of May 29, 2025. The disability categories overlap, so the percentages add to more than 100."
 });
 
 /* ---- Counts must match the index exactly ---- */

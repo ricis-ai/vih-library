@@ -2082,7 +2082,7 @@
     "section": "Radios",
     "list": "radio",
     "format": "PDF",
-    "url": null,
+    "url": "https://tonnesoftware.com/downloads/2017-mar-apr-qex-Tonne.pdf",
     "version": null,
     "date": null,
     "time": null,
@@ -2096,8 +2096,8 @@
       "cw",
       "reception"
     ],
-    "status": "pending",
-    "note": "This is a named author's technical paper, and its copyright status is not yet cleared, so it has no download link here yet. It is still in the group's Facebook Files."
+    "status": "available",
+    "note": "By James L. Tonne, W4ENE, QEX March/April 2017, copyright ARRL. The author hosts it himself, so the page links to his copy rather than hosting one. It is also still in the group's Facebook Files."
   },
   {
     "name": "Blind population distribution in the United States",
@@ -2107,7 +2107,7 @@
     "section": "Resources",
     "list": "res",
     "format": "PDF",
-    "url": null,
+    "url": "RES/Blind-Population-Distribution.pdf",
     "version": null,
     "date": null,
     "time": null,
@@ -2119,7 +2119,7 @@
       "statistics",
       "reference"
     ],
-    "status": "pending",
-    "note": "The source of this reference is not recorded, so its copyright status is not yet cleared, so it has no download link here yet. It is still in the group's Facebook Files."
+    "status": "available",
+    "note": "Made by Gregory AB9MZ from public data: data.gov, the World Health Organization (who.int), and resources from national blind organizations. Data as of May 29, 2025. The disability categories overlap, so the percentages add to more than 100."
   }
 ]

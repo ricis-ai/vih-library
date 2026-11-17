@@ -71,13 +71,11 @@ check("counts by list match the index (5 kit, 66 sections, 1+1+2+1+1)",
 /* ---- URL rules ---- */
 const withUrl = data.filter(function (e) { return e.url; });
 const withoutUrl = data.filter(function (e) { return !e.url; });
-check("74 entries have a download link, 3 do not",
-  withUrl.length === 74 && withoutUrl.length === 3,
+check("76 entries have a download link, 1 does not",
+  withUrl.length === 76 && withoutUrl.length === 1,
   withUrl.length + " with, " + withoutUrl.length + " without");
-check("the 3 link-less entries are the 2 pending files and the superseded index",
-  withoutUrl.every(function (e) { return e.status === "pending" || e.status === "superseded"; })
-  && withoutUrl.filter(function (e) { return e.status === "pending"; }).length === 2
-  && withoutUrl.filter(function (e) { return e.status === "superseded"; }).length === 1,
+check("the 1 link-less entry is the superseded index",
+  withoutUrl.length === 1 && withoutUrl[0].status === "superseded",
   withoutUrl.map(function (e) { return e.file; }).join(", "));
 check("every available entry has a URL",
   data.filter(function (e) { return e.status === "available"; })
@@ -91,7 +89,7 @@ check("every absolute URL starts with https://",
     .every(function (u) { return u.indexOf("https://") === 0; }));
 check("relative URLs live under a category folder",
   urls.filter(function (u) { return u.indexOf("://") === -1; })
-    .every(function (u) { return /^(CNTST|LIC)\//.test(u); }),
+    .every(function (u) { return /^(CNTST|LIC|RES)\//.test(u); }),
   urls.filter(function (u) { return u.indexOf("://") === -1; }).join(", "));
 
 /* ---- field-reference entries: renamed names, plain repo URLs ---- */
