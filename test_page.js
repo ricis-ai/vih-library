@@ -1,0 +1,234 @@
+/* Page-level test: runs index.html's render/search/sort inline script
+ * under a minimal DOM stub in Node, loads the real library.json, and
+ * checks that the browse lists it renders hold all 77 documents, that
+ * the search box and the sort control behave as specified, and that the
+ * pending and superseded entries render without download links.
+ * Run: node test_page.js (exit 0 only when every check passes).
+ *
+ * This checks the page's own render path and wording. It cannot check
+ * real browser behaviour (focus movement, aria-live announcement, the
+ * Facebook webview close button, real localStorage) -- those need a live
+ * browser check after deploy.
+ */
+"use strict";
+const fs = require("fs");
+const path = require("path");
+
+const DIR = __dirname;
+const html = fs.readFileSync(path.join(DIR, "index.html"), "utf8");
+const data = JSON.parse(fs.readFileSync(path.join(DIR, "library.json"), "utf8"));
+const LibrarySearch = require("./library.js");
+
+/* Pull out the render/search/sort inline <script> block (the one holding
+ * renderBrowse; the close-button script below it is not it). */
+const blocks = [...html.matchAll(/<script>\n([\s\S]*?)<\/script>/g)];
+const m = blocks.find((b) => b[1].indexOf("function renderBrowse") !== -1);
+if (!m) { console.log("FAIL  no render/search inline script block found"); process.exit(1); }
+const inlineJs = m[1];
+
+let failures = 0;
+function check(name, cond, detail) {
+  if (!cond) failures++;
+  console.log((cond ? "PASS" : "FAIL") + "  " + name + (detail ? "  | " + detail : ""));
+}
+
+/* ---- minimal DOM stub ---- */
+function makeElement(id) {
+  return {
+    id: id || "", textContent: "", innerHTML: "", className: "",
+    disabled: false, value: "", href: "", hidden: false,
+    _listeners: {},
+    addEventListener: function (type, fn) { this._listeners[type] = fn; },
+    focus: function () { this._focused = true; },
+    scrollIntoView: function () {},
+    querySelectorAll: function () { return []; },
+    getAttribute: function () { return null; },
+    setAttribute: function () {},
+    parentNode: { insertBefore: function () {}, replaceChild: function () {} }
+  };
+}
+const elements = {};
+["search-form", "search-input", "sort-select", "clear-search", "load-status",
+ "search-results", "main"].forEach((id) => { elements[id] = makeElement(id); });
+elements["clear-search"].hidden = true;
+elements["search-results"].hidden = true;
+const contentsNav = makeElement("contents-nav");
+const sectionsDiv = makeElement("sections-div");
+
+/* The 6 browse-list slots, in page order, as in index.html. */
+const LIST_KEYS = ["field-kit", "cntst", "gen", "lic", "radio", "res"];
+const listStubs = LIST_KEYS.map(function (key) {
+  const el = makeElement("ul-" + key);
+  el.getAttribute = function (attr) { return attr === "data-list" ? key : null; };
+  return el;
+});
+function slot(key) { return listStubs[LIST_KEYS.indexOf(key)]; }
+function countItems(el) { return (el.innerHTML.match(/<li>/g) || []).length; }
+
+/* In-memory localStorage stand-in, so the sort persistence path runs. */
+const storage = {};
+global.window = {
+  LibrarySearch: LibrarySearch,
+  location: { href: "", reload: function () {} },
+  close: function () {},
+  localStorage: {
+    getItem: function (k) { return k in storage ? storage[k] : null; },
+    setItem: function (k, v) { storage[k] = String(v); }
+  }
+};
+global.document = {
+  getElementById: function (id) { return elements[id] || null; },
+  querySelector: function (sel) {
+    if (sel === "nav.contents") return contentsNav;
+    if (sel === '[data-section-list="field-sections"]') return sectionsDiv;
+    return null;
+  },
+  querySelectorAll: function (sel) { return sel === "ul[data-list]" ? listStubs : []; },
+  createElement: function () { return makeElement(""); },
+  hidden: false
+};
+global.fetch = function (url) {
+  check("page fetches only library.json", url === "library.json", "fetched: " + url);
+  return Promise.resolve({
+    ok: true,
+    json: function () { return Promise.resolve(data); }
+  });
+};
+
+/* Run the page script. */
+eval(inlineJs);
+
+/* Let the fetch promise resolve, then drive the page. */
+setTimeout(function () {
+  check("load status reports 77 documents",
+    elements["load-status"].textContent === "Library loaded: 77 documents.",
+    elements["load-status"].textContent);
+
+  check("sort select defaults to the listed order (nothing saved yet)",
+    elements["sort-select"].value === "listed",
+    elements["sort-select"].value);
+
+  /* Browse lists hold every document. */
+  check("kit list holds 5 items", countItems(slot("field-kit")) === 5,
+    "got " + countItems(slot("field-kit")));
+  check("contests list holds 1 item", countItems(slot("cntst")) === 1);
+  check("general list holds 1 item", countItems(slot("gen")) === 1);
+  check("licensing list holds 2 items", countItems(slot("lic")) === 2);
+  check("radios list holds 1 item", countItems(slot("radio")) === 1);
+  check("resources list holds 1 item", countItems(slot("res")) === 1);
+  const sectionItems = countItems(sectionsDiv);
+  check("field sections hold 66 items", sectionItems === 66, "got " + sectionItems);
+  const total = listStubs.reduce(function (n, el) { return n + countItems(el); }, 0) + sectionItems;
+  check("rendered browse lists hold 77 items in all", total === 77, "got " + total);
+
+  /* Section headings: 22, in book order, as skip points. */
+  const h3s = [...sectionsDiv.innerHTML.matchAll(/<h3 id="field-([^"]+)">([^<]+)<\/h3>/g)];
+  check("sections render 22 headings in book order (guide first, reference last)",
+    h3s.length === 22 && h3s[0][1] === "guide" && h3s[0][2] === "Using and printing this book"
+    && h3s[21][1] === "reference" && h3s[21][2] === "Glossary and review checklist",
+    "got " + h3s.length + " headings");
+
+  /* Version stamp wording. */
+  check("kit list shows the version stamp in words",
+    slot("field-kit").innerHTML.indexOf(
+      "Version 2.0. Revised 16 November 2026 at 22:18 Central. By AB9MZ.") !== -1);
+
+  /* Pending and superseded entries have no download link. */
+  check("radios list carries the pending flag and no link",
+    slot("radio").innerHTML.indexOf("Coming soon — source check pending.") !== -1
+    && slot("radio").innerHTML.indexOf("<a href=") === -1);
+  check("resources list carries the pending flag and no link",
+    slot("res").innerHTML.indexOf("Coming soon — source check pending.") !== -1
+    && slot("res").innerHTML.indexOf("<a href=") === -1);
+  check("general list carries the superseded flag and no link",
+    slot("gen").innerHTML.indexOf("Superseded by this page.") !== -1
+    && slot("gen").innerHTML.indexOf("<a href=") === -1);
+
+  /* Link targets. */
+  check("kit zip links to its Facebook Files post",
+    slot("field-kit").innerHTML.indexOf(
+      "https://www.facebook.com/groups/742838019382868/permalink/3039961369670510/") !== -1);
+  check("question-pool text links to the relative library path",
+    slot("lic").innerHTML.indexOf('href="LIC/Technician-Question-Pool-2026-2030.txt"') !== -1);
+  check("question-pool Braille links to the Technician class page",
+    slot("lic").innerHTML.indexOf(
+      "https://ricis-ai.github.io/technician-class/braille/Technician-Question-Pool-2026-2030.brf") !== -1);
+  check("a section file links into the field-reference repo with the plain kit name",
+    sectionsDiv.innerHTML.indexOf(
+      'href="https://ricis-ai.github.io/field-reference/sections/morse.pdf"') !== -1);
+
+  function typeSearch(value) {
+    elements["search-input"].value = value;
+    elements["search-input"]._listeners.input();
+  }
+  function setSort(value) {
+    elements["sort-select"].value = value;
+    elements["sort-select"]._listeners.change();
+  }
+
+  /* Search: morse */
+  typeSearch("morse");
+  const r1 = elements["search-results"].innerHTML;
+  check("search announces 7 documents found", r1.indexOf("7 documents found.") !== -1);
+  check("search results name the Morse files and the Tonne article",
+    r1.indexOf("Morse code and procedural signals") !== -1
+    && r1.indexOf("Tonne") !== -1);
+  check("browse hidden while searching",
+    elements["search-results"].hidden === false
+    && contentsNav.hidden === true && elements["main"].hidden === true);
+  check("Clear search button appears while searching",
+    elements["clear-search"].hidden === false);
+
+  /* Search: no match */
+  typeSearch("zzzzz");
+  const r2 = elements["search-results"].innerHTML;
+  check("no-match message names the query and suggests a word or category",
+    r2.indexOf('No documents match "zzzzz"') !== -1
+    && r2.indexOf("Try a word like Morse") !== -1);
+
+  /* Clear restores the browse list */
+  elements["clear-search"]._listeners.click();
+  check("Clear search restores the browse list",
+    elements["search-results"].hidden === true
+    && elements["search-results"].innerHTML === ""
+    && contentsNav.hidden === false && elements["main"].hidden === false
+    && elements["search-input"].value === "");
+
+  /* Sort: name A to Z */
+  setSort("name-asc");
+  check("sort choice is saved in localStorage",
+    storage["vih-library-sort"] === "name-asc",
+    storage["vih-library-sort"]);
+  const kitAsc = slot("field-kit").innerHTML;
+  check("kit list under name-asc starts with the tagged book",
+    kitAsc.indexOf("AB9MZ_Amateur_Radio_Field_Reference-tagged_v2.0") !== -1
+    && kitAsc.indexOf("AB9MZ_Amateur_Radio_Field_Reference-tagged_v2.0")
+      < kitAsc.indexOf("AB9MZ_Field_Reference_Complete_Kit"));
+  check("sections under name-asc render as one flat list with no headings",
+    sectionsDiv.innerHTML.indexOf("<h3") === -1
+    && countItems(sectionsDiv) === 66);
+  check("sections under name-asc start with the ares tagged file",
+    sectionsDiv.innerHTML.indexOf("ares-tagged_v2.0") !== -1
+    && sectionsDiv.innerHTML.indexOf("ares-tagged_v2.0")
+      < sectionsDiv.innerHTML.indexOf("ares_v2.0"));
+
+  /* Search results follow the sort order too */
+  typeSearch("question pool");
+  const r3 = elements["search-results"].innerHTML;
+  check("search under name-asc lists the Braille pool file before the text pool file",
+    r3.indexOf("2 documents found.") !== -1
+    && r3.indexOf(".brf") !== -1 && r3.indexOf(".txt") !== -1
+    && r3.indexOf(".brf") < r3.indexOf(".txt"));
+  elements["clear-search"]._listeners.click();
+
+  /* Sort back to the listed order restores the section headings */
+  setSort("listed");
+  const h3sBack = [...sectionsDiv.innerHTML.matchAll(/<h3 /g)];
+  check("returning to the listed order restores the 22 section headings",
+    h3sBack.length === 22, "got " + h3sBack.length);
+  check("sort choice updated in localStorage",
+    storage["vih-library-sort"] === "listed");
+
+  console.log("\n" + (failures === 0 ? "ALL PAGE CHECKS PASSED" : failures + " PAGE CHECK(S) FAILED"));
+  process.exit(failures === 0 ? 0 : 1);
+}, 100);

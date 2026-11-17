@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content="The document library of Visually Inconvenienced Hams: the AB9MZ Master Field Reference, the contest schedule, the Technician question pool, and every other group document, organized by category, with search and a sort that stays put." />
+    <link rel="icon" href="data:," />
+    <title>Document Library — Visually Inconvenienced Hams</title>
+    <style>
+      :root {
+        --bg: #000000;
+        --text: #ffffff;
+        --good: #00ff00;
+        --fair: #ffb300;
+        --poor: #ff6666;
+        --focus: #ffff00;
+        --panel: #0d0d0d;
+        --border: #ffffff;
+        --muted: #cccccc;
+      }
+      * { box-sizing: border-box; }
+      html { font-size: 20px; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: Verdana, Geneva, "Segoe UI", Tahoma, sans-serif;
+        line-height: 1.5;
+        padding: 1rem;
+      }
+      .wrap { max-width: 46rem; margin: 0 auto; }
+
+      .skip-link {
+        position: absolute;
+        left: -9999px;
+        top: 0;
+        background: var(--focus);
+        color: #000;
+        font-weight: bold;
+        padding: 0.75rem 1rem;
+        z-index: 10;
+      }
+      .skip-link:focus { left: 0.5rem; top: 0.5rem; }
+
+      a { color: var(--fair); }
+      a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+        outline: 4px solid var(--focus);
+        outline-offset: 3px;
+      }
+
+      h1 { font-size: 2rem; line-height: 1.2; margin: 0.5rem 0 0.25rem; }
+      h2 { font-size: 1.5rem; margin: 1.75rem 0 0.5rem; }
+      h3 { font-size: 1.25rem; margin: 1.25rem 0 0.25rem; }
+      p { margin: 0.5rem 0; }
+
+      .back-link {
+        display: block;
+        border: 3px solid var(--border);
+        background: var(--panel);
+        color: var(--text);
+        font-size: 1.25rem;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: underline;
+        padding: 1rem;
+        margin: 1rem 0 0.5rem;
+        min-height: 3.5rem;
+      }
+      .back-link:hover { background: #1f1f1f; }
+      button.back-link {
+        font: inherit;
+        cursor: pointer;
+        text-decoration: none;
+        width: 100%;
+      }
+      .close-note {
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin: 0.5rem 0;
+      }
+
+      .contents {
+        border: 3px solid var(--border);
+        background: var(--panel);
+        padding: 1rem 1.25rem;
+        margin: 0.75rem 0;
+      }
+      .contents ul { margin: 0.5rem 0; padding-left: 1.25rem; }
+      .contents li { padding: 0.3rem 0; font-size: 1.1rem; }
+
+      .note {
+        border: 3px solid var(--fair);
+        background: var(--panel);
+        padding: 1rem 1.25rem;
+        margin: 0.75rem 0;
+        font-size: 1.1rem;
+      }
+
+      .doc-list { list-style: none; margin: 0.5rem 0; padding: 0; font-size: 1.1rem; }
+      .doc-list li { padding: 0.6rem 0; border-bottom: 1px solid #444; }
+      .doc-list li:last-child { border-bottom: none; }
+      .doc-list .label { display: block; margin-top: 0.2rem; font-size: 1rem; }
+
+      .fmt-text { color: var(--good); font-weight: bold; }
+      .fmt-scan { color: var(--poor); font-weight: bold; }
+      .fmt-pending { color: var(--fair); font-weight: bold; }
+      .fmt-superseded { color: var(--muted); font-weight: bold; }
+
+      .small { font-size: 1rem; color: var(--muted); }
+
+      label { display: block; font-size: 1.2rem; font-weight: bold; margin: 0.5rem 0 0.25rem; }
+      .hint { font-size: 1.05rem; color: var(--muted); margin: 0.25rem 0 0.5rem; }
+      input[type="search"] {
+        display: block;
+        width: 100%;
+        min-height: 3.5rem;
+        padding: 0.75rem 1rem;
+        font: inherit;
+        font-size: 1.4rem;
+        color: var(--text);
+        background: #111111;
+        border: 3px solid var(--border);
+        margin: 0.25rem 0 0.75rem;
+      }
+      select {
+        display: block;
+        width: 100%;
+        min-height: 3.5rem;
+        padding: 0.75rem 1rem;
+        font: inherit;
+        font-size: 1.25rem;
+        color: var(--text);
+        background: #111111;
+        border: 3px solid var(--border);
+        margin: 0.25rem 0 0.75rem;
+      }
+      button.secondary {
+        display: block;
+        width: 100%;
+        min-height: 3rem;
+        margin: 0.5rem 0;
+        padding: 0.7rem 1rem;
+        font: inherit;
+        font-size: 1.15rem;
+        font-weight: bold;
+        color: var(--text);
+        background: var(--panel);
+        border: 3px solid var(--fair);
+        cursor: pointer;
+      }
+      button.secondary:hover { background: #1f1f1f; }
+      .status { font-size: 1.2rem; font-weight: bold; min-height: 1.8em; margin: 0.5rem 0; }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to the document library</a>
+    <div class="wrap">
+      <a class="back-link" href="https://m.facebook.com/groups/742838019382868">Back to Visually Inconvenienced Hams on Facebook</a>
+
+      <h1>Visually Inconvenienced Hams Document Library</h1>
+      <p>Every document in the group, organized by category, with search and a sort that stays put. First edition — 16 November 2026. 77 documents.</p>
+      <p>The files also live in the group's Facebook Files section. This page is the organized front door: real categories, a search box, and a sort order you choose once and keep, on the phone as well as the desktop.</p>
+
+      <form id="search-form" role="search">
+        <label for="search-input">Search the library</label>
+        <p class="hint" id="search-hint">Try a word like Morse, a category like licensing, or a file type like Braille.</p>
+        <input type="search" id="search-input" name="search" aria-describedby="search-hint" autocomplete="off" spellcheck="false" />
+        <label for="sort-select">Sort the lists</label>
+        <p class="hint" id="sort-hint">Your choice is saved in this browser, so the lists stay sorted the way you left them.</p>
+        <select id="sort-select" aria-describedby="sort-hint">
+          <option value="listed">As listed — the index order</option>
+          <option value="name-asc">Name, A to Z</option>
+          <option value="name-desc">Name, Z to A</option>
+          <option value="date-newest">Newest first</option>
+          <option value="date-oldest">Oldest first</option>
+        </select>
+        <button type="button" class="secondary" id="clear-search" hidden>Clear search</button>
+      </form>
+      <p id="load-status" class="status" role="status">Loading the library…</p>
+      <div id="search-results" hidden></div>
+
+      <nav class="contents" aria-label="Contents">
+        <h2>Contents</h2>
+        <ul>
+          <li><a href="#how-to-use">How to use this library</a></li>
+          <li><a href="#field-reference">AB9MZ Master Field Reference — Edition 2.0</a></li>
+          <li><a href="#contests">Contests</a></li>
+          <li><a href="#general">General</a></li>
+          <li><a href="#licensing">Licensing and Exams</a></li>
+          <li><a href="#radios">Radios</a></li>
+          <li><a href="#resources">Resources</a></li>
+          <li><a href="#empty-categories">Categories with no documents yet</a></li>
+          <li><a href="#about">About this library</a></li>
+        </ul>
+      </nav>
+
+      <main id="main">
+        <h2 id="how-to-use">How to use this library</h2>
+        <p>Find the category for what you want, or type a word in the search box above. The search looks at every file's name, category, format, and keywords, and it filters as you type.</p>
+        <p>Every file shows its name, its format, its category, and its version, revision date, and author where the file name carries them. File names carry a version stamp, like v2.0-20261116-2218-AB9MZ, which reads as version 2.0, revised 16 November 2026 at 22:18 Central, by AB9MZ. The stamp tells you at a glance whether the file you found is the current one.</p>
+        <p>Three kinds of file label appear on this page:</p>
+        <ul class="doc-list">
+          <li><span class="fmt-text">A download link.</span> Tap the file name to download it.</li>
+          <li><span class="fmt-pending">Coming soon — source check pending.</span> The file is listed but has no download link yet, because its copyright status has not been cleared. It is still in the group's Facebook Files.</li>
+          <li><span class="fmt-superseded">Superseded by this page.</span> The old text index is no longer updated, because this page is the index now.</li>
+        </ul>
+        <p>To come back to the group, use the Back to Visually Inconvenienced Hams link at the top or the bottom of this page. Inside Facebook's own browser that link becomes a close button instead.</p>
+
+        <h2 id="field-reference">AB9MZ Master Field Reference — Edition 2.0</h2>
+        <p>Gregory Rosenberg AB9MZ's field reference, 22 sections, 112 pages, in large print (22 point text, 28 point headings). Every section is here in three formats: a large-print PDF, a Word document, and a tagged PDF that screen readers navigate by heading. The collection has its own home page, with an offline section selector that builds a custom edition from the sections you pick: <a href="https://ricis-ai.github.io/field-reference/">AB9MZ Master Field Reference home page</a>.</p>
+        <p>Braille and plain-text editions of the whole book and every section are also available, in the field-reference repository: <a href="https://github.com/ricis-ai/field-reference/tree/main/braille">Braille files (.brf, contracted UEB grade 2)</a> and <a href="https://github.com/ricis-ai/field-reference/tree/main/txt">plain-text files (.txt)</a>.</p>
+        <h3>The whole kit</h3>
+        <ul class="doc-list" data-list="field-kit"></ul>
+        <h3>Sections</h3>
+        <div data-section-list="field-sections"></div>
+
+        <h2 id="contests">Contests (CNTST)</h2>
+        <ul class="doc-list" data-list="cntst"></ul>
+
+        <h2 id="general">General (GEN)</h2>
+        <ul class="doc-list" data-list="gen"></ul>
+
+        <h2 id="licensing">Licensing and Exams (LIC)</h2>
+        <ul class="doc-list" data-list="lic"></ul>
+
+        <h2 id="radios">Radios (RADIO)</h2>
+        <ul class="doc-list" data-list="radio"></ul>
+
+        <h2 id="resources">Resources (RES)</h2>
+        <ul class="doc-list" data-list="res"></ul>
+
+        <h2 id="empty-categories">Categories with no documents yet</h2>
+        <p>These categories are part of the library's structure, and they hold no documents yet. They are listed here so you can see where new documents will land. When a document is added to one of these categories, it appears in its own section above.</p>
+        <ul class="doc-list">
+          <li>ACCESS — Accessibility. No documents yet.</li>
+          <li>ANT — Antennas. No documents yet.</li>
+          <li>APRS — APRS. No documents yet.</li>
+          <li>ARES — ARES. No documents yet.</li>
+          <li>DIGI — Digital Modes. No documents yet.</li>
+          <li>EMERG — Emergency. No documents yet.</li>
+          <li>GOVT — Government. No documents yet.</li>
+          <li>GOVT-LOC — Local government. No documents yet.</li>
+          <li>GOVT-CTY — County government. No documents yet.</li>
+          <li>GOVT-STATE — State government. No documents yet.</li>
+          <li>GOVT-RRCC — Regional government (RRCC). No documents yet.</li>
+          <li>GOVT-NAT — National government. No documents yet.</li>
+          <li>GOVT-FED — Federal government. No documents yet.</li>
+          <li>GOVT-INTL — International. No documents yet.</li>
+          <li>GOVT-SPC — Space. No documents yet.</li>
+          <li>GND — Grounding and Bonding. No documents yet.</li>
+          <li>NETS — Nets and Repeaters. No documents yet.</li>
+          <li>POL — Policies. No documents yet.</li>
+          <li>PROC — Procedures. No documents yet.</li>
+          <li>PROP — Propagation. No documents yet.</li>
+          <li>SOFT — Software. No documents yet.</li>
+          <li>WX — Weather. No documents yet.</li>
+        </ul>
+
+        <h2 id="about">About this library</h2>
+        <p>This page replaces the group's text document index. Facebook does not let a group organize its Files into folders, and its phone app lists files newest first with no sort control at all, so the group keeps its library here instead, where the files sit in real categories, the search box finds them, and the sort order stays the way you set it.</p>
+        <p>Most files on this page are the group's own documents, or public-domain material such as the Technician question pool. Two files are listed without download links while their copyright status is checked. Manufacturer radio manuals are not part of this library; they live on the group's <a href="https://ricis-ai.github.io/hamradio-documentation/">amateur radio manuals page</a>, which links to the makers' own sites.</p>
+        <p>If a link on this page stops working, or if you would like a document added to the library, post in the Visually Inconvenienced Hams group and say which file it is. A member who wants to share a document sends it to an admin, and an admin adds it here.</p>
+        <p class="small">First edition — 16 November 2026. 77 documents listed: the AB9MZ Master Field Reference collection (71 files), the contest schedule, the document index, the Technician question pool in plain text and Braille, and two files awaiting a source check.</p>
+      </main>
+
+      <a class="back-link" href="https://m.facebook.com/groups/742838019382868">Back to Visually Inconvenienced Hams on Facebook</a>
+    </div>
+
+    <script src="library.js"></script>
+    <script>
+(function () {
+  "use strict";
+  var L = window.LibrarySearch;
+
+  function $(id) { return document.getElementById(id); }
+
+  function esc(text) {
+    return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  var MONTHS = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"];
+
+  /* "2026-11-16" becomes "16 November 2026". */
+  function prettyDate(iso) {
+    var parts = String(iso).split("-");
+    return parseInt(parts[2], 10) + " " + MONTHS[parseInt(parts[1], 10) - 1] + " " + parts[0];
+  }
+
+  /* "Version 2.0. Revised 16 November 2026 at 22:18 Central. By AB9MZ."
+   * Parts that are unknown are left out, so a file with no stamp shows
+   * nothing here. */
+  function versionLabel(entry) {
+    var bits = [];
+    if (entry.version) bits.push("Version " + entry.version);
+    if (entry.date) {
+      var d = "Revised " + prettyDate(entry.date);
+      if (entry.time) d += " at " + entry.time + " Central";
+      bits.push(d);
+    }
+    if (entry.author) bits.push("By " + entry.author);
+    return bits.length ? bits.join(". ") + "." : "";
+  }
+
+  var searchForm = $("search-form");
+  var searchInput = $("search-input");
+  var sortSelect = $("sort-select");
+  var clearBtn = $("clear-search");
+  var loadStatus = $("load-status");
+  var resultsBox = $("search-results");
+  var contentsNav = document.querySelector("nav.contents");
+  var mainEl = $("main");
+
+  var LIBRARY = null;
+
+  /* The sort choice is saved in the browser so it stays put between
+   * visits. Storage may be unavailable (private browsing), so both
+   * directions are guarded and the page simply falls back to the
+   * default order. */
+  var SORT_KEY = "vih-library-sort";
+  function loadSort() {
+    try {
+      var saved = window.localStorage.getItem(SORT_KEY);
+      if (saved && L.SORT_ORDERS.indexOf(saved) !== -1) return saved;
+    } catch (e) { /* storage unavailable — use the default */ }
+    return "listed";
+  }
+  function saveSort(order) {
+    try { window.localStorage.setItem(SORT_KEY, order); } catch (e) { /* ignore */ }
+  }
+  var currentOrder = loadSort();
+
+  /* One browse-list item: the file name as a download link (or plain
+   * bold text when the file has no link yet), then the file name, the
+   * format, the category, the version and date, and any note. */
+  function browseItem(entry) {
+    var html = "<li>";
+    if (entry.url) {
+      html += '<a href="' + esc(entry.url) + '">' + esc(entry.name) + "</a>";
+    } else {
+      html += "<strong>" + esc(entry.name) + "</strong>";
+    }
+    html += '<span class="label">' + esc(entry.file) + " — " + esc(entry.format) + ". "
+      + esc(entry.categoryName) + ". ";
+    var v = versionLabel(entry);
+    if (v) html += v + " ";
+    if (entry.status === "pending") {
+      html += '<span class="fmt-pending">Coming soon — source check pending.</span> ';
+    } else if (entry.status === "superseded") {
+      html += '<span class="fmt-superseded">Superseded by this page.</span> ';
+    }
+    if (entry.note) html += esc(entry.note);
+    html += "</span></li>";
+    return html;
+  }
+
+  /* The field-reference sections. In the default order they render
+   * grouped by section, each with its own heading as a skip point, in
+   * book order. Under any other sort they render as one flat list in
+   * that order, since a sort by name or date cuts across sections. */
+  function renderFieldSections(order) {
+    var container = document.querySelector('[data-section-list="field-sections"]');
+    if (!container) return;
+    var items = [];
+    for (var j = 0; j < LIBRARY.length; j++) {
+      if (LIBRARY[j].list === "field-sections") items.push(LIBRARY[j]);
+    }
+    var html = "";
+    if (order === "listed") {
+      var groups = L.groupBySubsection(items);
+      for (var g = 0; g < groups.length; g++) {
+        html += '<h3 id="field-' + esc(groups[g].subsection) + '">' + esc(groups[g].title) + "</h3>";
+        html += '<ul class="doc-list">';
+        for (var i = 0; i < groups[g].entries.length; i++) html += browseItem(groups[g].entries[i]);
+        html += "</ul>";
+      }
+    } else {
+      items = L.sortLibrary(items, order);
+      html += '<ul class="doc-list">';
+      for (var i = 0; i < items.length; i++) html += browseItem(items[i]);
+      html += "</ul>";
+    }
+    container.innerHTML = html;
+  }
+
+  function renderBrowse(order) {
+    var lists = document.querySelectorAll("ul[data-list]");
+    for (var i = 0; i < lists.length; i++) {
+      var key = lists[i].getAttribute("data-list");
+      var items = [];
+      for (var j = 0; j < LIBRARY.length; j++) {
+        if (LIBRARY[j].list === key) items.push(LIBRARY[j]);
+      }
+      items = L.sortLibrary(items, order);
+      var html = "";
+      for (var k = 0; k < items.length; k++) html += browseItem(items[k]);
+      lists[i].innerHTML = html;
+    }
+    renderFieldSections(order);
+  }
+
+  function showBrowse() {
+    resultsBox.hidden = true;
+    resultsBox.innerHTML = "";
+    if (contentsNav) contentsNav.hidden = false;
+    if (mainEl) mainEl.hidden = false;
+    clearBtn.hidden = true;
+  }
+
+  function showSearch(query, order) {
+    var results = L.searchLibrary(LIBRARY, query);
+    var html = "";
+    if (results.length === 0) {
+      html += '<p class="status" role="status">No documents match "' + esc(query) + '". Try a word like Morse, or a category like licensing.</p>';
+    } else {
+      html += '<p class="status" role="status">' + results.length
+        + (results.length === 1 ? " document found." : " documents found.") + "</p>";
+      var groups = L.groupBySection(results);
+      for (var g = 0; g < groups.length; g++) {
+        var entries = L.sortLibrary(groups[g].entries, order);
+        html += "<h3>" + esc(groups[g].section) + "</h3>";
+        html += '<ul class="doc-list">';
+        for (var i = 0; i < entries.length; i++) {
+          html += browseItem(entries[i]);
+        }
+        html += "</ul>";
+      }
+    }
+    resultsBox.innerHTML = html;
+    resultsBox.hidden = false;
+    if (contentsNav) contentsNav.hidden = true;
+    if (mainEl) mainEl.hidden = true;
+    clearBtn.hidden = false;
+  }
+
+  function runSearch() {
+    if (!LIBRARY) return;
+    var query = searchInput.value.trim();
+    if (query === "") { showBrowse(); return; }
+    showSearch(query, currentOrder);
+  }
+
+  function rerender() {
+    if (!LIBRARY) return;
+    var query = searchInput.value.trim();
+    if (query === "") {
+      renderBrowse(currentOrder);
+    } else {
+      showSearch(query, currentOrder);
+    }
+  }
+
+  searchInput.addEventListener("input", runSearch);
+  searchInput.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      searchInput.value = "";
+      showBrowse();
+    }
+  });
+  searchForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    runSearch();
+  });
+  clearBtn.addEventListener("click", function () {
+    searchInput.value = "";
+    showBrowse();
+    searchInput.focus();
+  });
+  sortSelect.addEventListener("change", function () {
+    currentOrder = sortSelect.value;
+    saveSort(currentOrder);
+    rerender();
+  });
+
+  /* ---- Load the library list (same site, no outside service) ------------ */
+  fetch("library.json").then(function (response) {
+    if (!response.ok) throw new Error("library.json returned " + response.status);
+    return response.json();
+  }).then(function (data) {
+    LIBRARY = data;
+    sortSelect.value = currentOrder;
+    renderBrowse(currentOrder);
+    loadStatus.textContent = "Library loaded: " + data.length + " documents.";
+  }).catch(function () {
+    loadStatus.textContent = "The library did not load. Check your connection, then reload this page.";
+    var retry = document.createElement("button");
+    retry.type = "button";
+    retry.className = "secondary";
+    retry.textContent = "Reload this page";
+    retry.addEventListener("click", function () { window.location.reload(); });
+    loadStatus.parentNode.insertBefore(retry, loadStatus.nextSibling);
+  });
+})();
+</script>
+
+<script>
+(function () {
+  // ---- Close buttons in Facebook's in-app browser ---------------------------
+  // No link form reaches the group from inside Facebook's own browser: the
+  // www address, the mobile address, and the fb:// deep link were each
+  // tested fresh on Gregory's phone and each ended at "Page not found"
+  // (2026-11-15). So inside that browser the back-links become close
+  // buttons instead: window.close() if the browser honours it, and if the
+  // page is still open a second later, a plain instruction to use the X
+  // button at the top left, which returns to the Facebook app.
+  // window.close() was proven NOT to work in Facebook's iOS webview
+  // (tested on Gregory's phone 2026-11-15), so the fallback note is the
+  // working path. Outside that browser the back-links stay as they are.
+  var FB_WEBVIEW = /FBAN|FBAV|FB_IAB/i.test(navigator.userAgent);
+  if (FB_WEBVIEW) {
+    // Only the back-links (class back-link) become close buttons. The kit
+    // zip entry also links to facebook.com, but it is a download link, so
+    // it must stay a link.
+    var backAnchors = document.querySelectorAll('a.back-link[href*="facebook.com/groups/742838019382868"]');
+    for (var bi = 0; bi < backAnchors.length; bi++) {
+      (function (anchor) {
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "back-link";
+        btn.textContent = "Close this page and return to Facebook";
+        var noteShown = false;
+        btn.addEventListener("click", function () {
+          window.close();
+          setTimeout(function () {
+            if (!document.hidden && !noteShown) {
+              noteShown = true;
+              var note = document.createElement("p");
+              note.className = "close-note";
+              note.setAttribute("role", "status");
+              note.textContent = "This browser won't let the page close itself. To go back to Facebook, tap the X button at the top left of the screen.";
+              btn.parentNode.insertBefore(note, btn.nextSibling);
+            }
+          }, 1200);
+        });
+        anchor.parentNode.replaceChild(btn, anchor);
+      })(backAnchors[bi]);
+    }
+  }
+
+  // ---- Back-to-group links (other mobile browsers) ---------------------------
+  // Inside Facebook's own browser the links above are replaced by close
+  // buttons (see the block above), because every link form fails there.
+  // In other mobile browsers (Safari, Chrome), try the native app deep link
+  // fb://group/<id> first — it opens the group in the Facebook app — and
+  // fall back to the plain web address if the app does not open. On desktop
+  // the web address works fine, so the link behaves normally. Without
+  // JavaScript the links are plain web addresses.
+  var GROUP_DEEP_LINK = "fb://group/742838019382868";
+  var isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if (isMobile) {
+    // Back-links only (class back-link): the kit zip download link also
+    // points at facebook.com and must stay an ordinary link.
+    var groupLinks = document.querySelectorAll('a.back-link[href*="facebook.com/groups/742838019382868"]');
+    for (var gi = 0; gi < groupLinks.length; gi++) {
+      groupLinks[gi].addEventListener("click", function (event) {
+        event.preventDefault();
+        var fallbackUrl = this.href;
+        var attemptedAt = Date.now();
+        window.location.href = GROUP_DEEP_LINK;
+        setTimeout(function () {
+          // If the Facebook app opened, this page is hidden or gone; only
+          // fall back when we are still here and visible.
+          if (!document.hidden && Date.now() - attemptedAt < 5000) {
+            window.location.href = fallbackUrl;
+          }
+        }, 1500);
+      });
+    }
+  }
+})();
+</script>
+  </body>
+</html>
