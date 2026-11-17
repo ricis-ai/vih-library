@@ -1,0 +1,29 @@
+# lychee configuration for the VIH group document library page.
+#
+# The document links live in library.json (the page renders them from it);
+# index.html and README.md carry the remaining links.
+
+# Accept the usual success codes plus 429 (rate limiting is transient, not a
+# broken link — lychee retries before giving up).
+accept = [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 429]
+
+# Be patient: some hosts are slow, and PDFs are large.
+timeout = 30
+max_retries = 3
+
+# A browser user agent: several hosts reject lychee's default agent.
+user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+
+# Hosts that block automated requests and would otherwise fail every run.
+# Each must be spot-checked by a person from time to time, because lychee
+# cannot check them.
+exclude = [
+  # Facebook links need a signed-in session; lychee cannot check them.
+  # Covers the back-to-group links and the kit-zip link to its Facebook
+  # Files post. Verified live by hand when the page was built.
+  "https://www.facebook.com/*",
+  "https://m.facebook.com/*",
+]
+
+# Fragments (the #section jump links) are page-internal; lychee checks them
+# against the local files, which is what we want. Do not exclude them.
