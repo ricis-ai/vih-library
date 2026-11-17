@@ -1,0 +1,56 @@
+# Weekly link check for the VIH group document library page.
+#
+# Runs lychee over every HTML, Markdown, and JSON file in the repo. The
+# document links live in library.json now (the page renders them from
+# it), so the JSON file is checked too. On a scheduled run, a failure opens
+# a GitHub issue containing the lychee report so a human can triage it
+# (lychee cannot detect soft 404s, and some hosts block bots — see
+# .lychee.toml for the exclusions and why they exist).
+#
+# Also runs on pushes that change the page or data, but push runs do NOT
+# open an issue — they just fail the check so the author sees it.
+
+name: Check library links
+
+on:
+  schedule:
+    # Mondays 15:00 UTC (staggered an hour after the manuals check).
+    - cron: "0 15 * * 1"
+  push:
+    paths:
+      - "index.html"
+      - "library.json"
+      - "**.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Check links with lychee
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # NOTE: do NOT put --output in args. lychee-action always passes its
+          # own --output (from the `output` input below), and lychee errors
+          # out if --output is also in args. The report lands at the path
+          # given by `output`, which the issue step below reads.
+          args: --config .lychee.toml --format markdown --no-progress "./**/*.html" "./**/*.md" "./**/*.json"
+          output: lychee-report.md
+          fail: true
+
+      - name: Open an issue when the scheduled check fails
+        if: failure() && github.event_name == 'schedule'
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "Link check failed — broken links in the library page"
+          content-filepath: lychee-report.md
+          labels: |
+            broken-link
